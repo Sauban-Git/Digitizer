@@ -12,7 +12,7 @@ class DrawingView(context: Context) : View(context) {
     private val paint = Paint().apply {
         color = Color.BLACK
         style = Paint.Style.STROKE
-        strokeWidth = 10f
+        strokeWidth = 5f // Increased thickness for visibility
     }
     private val path = Path()
 
@@ -30,7 +30,6 @@ class DrawingView(context: Context) : View(context) {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 path.moveTo(event.x, event.y)
-                // Indicate that the touch event has been handled
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
@@ -38,7 +37,6 @@ class DrawingView(context: Context) : View(context) {
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
-                // Call performClick() if the event should be treated as a click
                 performClick()
             }
         }
