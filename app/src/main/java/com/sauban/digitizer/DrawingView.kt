@@ -17,6 +17,7 @@ class DrawingView(context: Context) : View(context) {
     private val path = Path()
 
     init {
+        setBackgroundColor(Color.WHITE)
         isFocusable = true
         isFocusableInTouchMode = true
     }
