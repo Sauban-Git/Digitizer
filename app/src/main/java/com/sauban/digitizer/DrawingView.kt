@@ -31,6 +31,7 @@ class DrawingView(context: Context) : View(context) {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 path.moveTo(event.x, event.y)
+                invalidate()
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
