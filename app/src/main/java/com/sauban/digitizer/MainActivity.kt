@@ -17,8 +17,13 @@ class MainActivity : AppCompatActivity() {
         val frameLayout = findViewById<FrameLayout>(R.id.frameLayout)
         frameLayout.addView(drawingView)
         val clearButton = findViewById<Button>(R.id.clearButton)
+        val saveButton = findViewById<Button>(R.id.saveButton)
         clearButton.setOnClickListener {
             drawingView.clearDrawing()
+        }
+        saveButton.setOnClickListener {
+            drawingView.saveDisplay()
+            drawingView.invalidate()
         }
     }
 }

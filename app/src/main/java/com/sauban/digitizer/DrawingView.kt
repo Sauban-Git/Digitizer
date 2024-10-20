@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import android.graphics.Bitmap
 
 class DrawingView(context: Context) : View(context) {
     private val paint = Paint().apply {
@@ -15,6 +16,9 @@ class DrawingView(context: Context) : View(context) {
         strokeWidth = 5f // Increased thickness for visibility
     }
     private val path = Path()
+    private var bitmap: Bitmap? = null
+    private var bitmapCanvas: Canvas? = null
+    private var savedBitmap: Bitmap? = null
 
     init {
         setBackgroundColor(Color.rgb(255, 182, 193))
@@ -24,7 +28,13 @@ class DrawingView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        bitmap?.let {canvas.drawBitmap(it, 0f, 0f, null)}
         canvas.drawPath(path, paint)
+        savedBitmap?.let {
+            val cornerSize = 500
+            val scaledBitmap = Bitmap.createScaledBitmap(it, cornerSize, cornerSize, true)
+            canvas.drawBitmap(scaledBitmap, width - it.width - 20f, 20f, null)
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -39,7 +49,8 @@ class DrawingView(context: Context) : View(context) {
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
-                performClick()
+                bitmapCanvas?.drawPath(path, paint)
+                invalidate()
             }
         }
         return true
@@ -53,6 +64,18 @@ class DrawingView(context: Context) : View(context) {
 
     fun clearDrawing() {
         path.reset()
+        bitmap = null
+        savedBitmap = null
         invalidate()
+    }
+    fun saveDisplay() {
+        savedBitmap = createBitmapFromPath()
+    }
+    private  fun createBitmapFromPath(): Bitmap? {
+        val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val newCanvas = Canvas(newBitmap)
+        newCanvas.drawColor(Color.WHITE)
+        newCanvas.drawPath(path, paint)
+        return newBitmap
     }
 }
