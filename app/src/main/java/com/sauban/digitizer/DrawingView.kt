@@ -20,7 +20,6 @@ class DrawingView(context: Context) : View(context) {
     private var bitmapCanvas: Canvas? = null
     private var savedBitmap: Bitmap? = null
     private var displayBitmap: Bitmap? = null
-    private var greyBitmap: Bitmap? = null
 
     init {
         setBackgroundColor(Color.rgb(255, 182, 193))
@@ -71,26 +70,42 @@ class DrawingView(context: Context) : View(context) {
         invalidate()
     }
     fun saveDisplay() {
-        savedBitmap = createBitmapFromPath()    }
-    private  fun createBitmapFromPath(): Bitmap? {
+        savedBitmap = createBitmapFromPath()
+    }
+
+    private fun createBitmapFromPath(): Bitmap {
+        // Create a new bitmap with the same dimensions as the view
         val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                val pixelColor = newBitmap.getPixel(x, y)
-                val grey = (Color.red(pixelColor) * 0.299 + Color.green(pixelColor) * 0.587 + Color.blue(pixelColor) * 0.114).toInt()
-                val greyColor = Color.argb(Color.alpha(pixelColor), grey, grey, grey)
-                newBitmap.setPixel(x, y, greyColor)
-            }
-        }
         val newCanvas = Canvas(newBitmap)
+
+        // Fill the new bitmap with a white background
         newCanvas.drawColor(Color.WHITE)
+
+        // Draw the path onto the new canvas
         newCanvas.drawPath(path, paint)
         displayBitmap = newBitmap
+
+        // Optional: Scale the bitmap if you need a smaller version
         return Bitmap.createScaledBitmap(newBitmap, 25, 25, true)
     }
-    private  fun bitmapOutput(): Bitmap? {
-        greyBitmap = createBitmapFromPath()
-        return greyBitmap
+
+    fun prepareGrayscaleBitmapData(bitmap: Bitmap): DoubleArray {
+        val width = 25
+        val height = 25
+        val inputData = DoubleArray(width * height)
+
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                val pixel = bitmap.getPixel(x, y)
+
+                // Convert the pixel to a normalized value (0.0 to 1.0) cheated from chatgpt
+                val grayValue = (pixel and 0xff) / 255.0
+                inputData[y * width + x] = grayValue // Flattening the 2D bitmap to 1D array
+            }
+        }
+
+        return inputData
     }
+
 
 }
