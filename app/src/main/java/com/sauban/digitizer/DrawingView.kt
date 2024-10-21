@@ -19,6 +19,8 @@ class DrawingView(context: Context) : View(context) {
     private var bitmap: Bitmap? = null
     private var bitmapCanvas: Canvas? = null
     private var savedBitmap: Bitmap? = null
+    private var displayBitmap: Bitmap? = null
+    private var greyBitmap: Bitmap? = null
 
     init {
         setBackgroundColor(Color.rgb(255, 182, 193))
@@ -30,10 +32,10 @@ class DrawingView(context: Context) : View(context) {
         super.onDraw(canvas)
         bitmap?.let {canvas.drawBitmap(it, 0f, 0f, null)}
         canvas.drawPath(path, paint)
-        savedBitmap?.let {
+        displayBitmap?.let {
             val cornerSize = 500
             val scaledBitmap = Bitmap.createScaledBitmap(it, cornerSize, cornerSize, true)
-            canvas.drawBitmap(scaledBitmap, width - it.width - 20f, 20f, null)
+            canvas.drawBitmap(scaledBitmap,10f, 20f, null)
         }
     }
 
@@ -73,9 +75,23 @@ class DrawingView(context: Context) : View(context) {
     }
     private  fun createBitmapFromPath(): Bitmap? {
         val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                val pixelColor = newBitmap.getPixel(x, y)
+                val grey = (Color.red(pixelColor) * 0.299 + Color.green(pixelColor) * 0.587 + Color.blue(pixelColor) * 0.114).toInt()
+                val greyColor = Color.argb(Color.alpha(pixelColor), grey, grey, grey)
+                newBitmap.setPixel(x, y, greyColor)
+            }
+        }
         val newCanvas = Canvas(newBitmap)
         newCanvas.drawColor(Color.WHITE)
         newCanvas.drawPath(path, paint)
-        return newBitmap
+        displayBitmap = newBitmap
+        return Bitmap.createScaledBitmap(newBitmap, 25, 25, true)
     }
+    private  fun bitmapOutput(): Bitmap? {
+        greyBitmap = createBitmapFromPath()
+        return greyBitmap
+    }
+
 }
