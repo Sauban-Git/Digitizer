@@ -69,9 +69,6 @@ class DrawingView(context: Context) : View(context) {
         displayBitmap = null
         invalidate()
     }
-    fun saveDisplay() {
-        savedBitmap = createBitmapFromPath()
-    }
 
     private fun createBitmapFromPath(): Bitmap {
         // Create a new bitmap with the same dimensions as the view
@@ -89,14 +86,16 @@ class DrawingView(context: Context) : View(context) {
         return Bitmap.createScaledBitmap(newBitmap, 25, 25, true)
     }
 
-    fun prepareGrayscaleBitmapData(bitmap: Bitmap): DoubleArray {
+    fun prepareGrayscaleBitmapData(): DoubleArray {
         val width = 25
         val height = 25
         val inputData = DoubleArray(width * height)
 
+        savedBitmap = createBitmapFromPath()
+
         for (y in 0 until height) {
             for (x in 0 until width) {
-                val pixel = bitmap.getPixel(x, y)
+                val pixel = savedBitmap!!.getPixel(x, y)
 
                 // Convert the pixel to a normalized value (0.0 to 1.0) cheated from chatgpt
                 val grayValue = (pixel and 0xff) / 255.0
