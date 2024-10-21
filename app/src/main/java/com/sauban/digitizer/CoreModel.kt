@@ -27,6 +27,12 @@ class CoreModel {
     fun getPredictions(A2: DoubleArray): Int {
         return A2.indices.maxByOrNull { A2[it] } ?: -1
     }
+    fun makePredictions(X: Array<DoubleArray>, W1: Array<DoubleArray>, b1: DoubleArray, W2: Array<DoubleArray>, b2: DoubleArray): Array<Double> {
+        val (_, _, _, A2) = forwardProp(W1, b1, W2, b2, X)
+        return getPredictions(A2)
+    }
+    
+
 }
 
 class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
