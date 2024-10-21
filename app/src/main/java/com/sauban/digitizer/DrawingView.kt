@@ -71,8 +71,7 @@ class DrawingView(context: Context) : View(context) {
         invalidate()
     }
     fun saveDisplay() {
-        savedBitmap = createBitmapFromPath()
-    }
+        savedBitmap = createBitmapFromPath()    }
     private  fun createBitmapFromPath(): Bitmap? {
         val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         for (y in 0 until height) {
