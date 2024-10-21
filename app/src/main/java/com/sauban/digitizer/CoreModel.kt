@@ -2,6 +2,10 @@ package com.sauban.digitizer
 
 
 
+import android.content.Context
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 class CoreModel {
 
     fun ReLU(z: DoubleArray): DoubleArray {
@@ -34,6 +38,28 @@ class CoreModel {
             getPredictions(A2)
         }.toIntArray()
     }
+
+    fun loadWeights(context: Context, fileName: String): Array<DoubleArray> {
+        val inputStream = context.assets.open(fileName)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+
+        return reader.lineSequence().map { line ->
+            line.split(",").map { it.trim().toDouble() }.toDoubleArray()
+        }.toList().toTypedArray()
+    }
+
+
+    fun loadBiases(context: Context, resId: Int): DoubleArray {
+        val inputStream = context.resources.openRawResource(resId)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+
+        return reader.lineSequence().flatMap { line ->
+            line.split(",").map { it.trim().toDouble() }
+        }.toList().toDoubleArray()
+    }
+
+
+
 
 
 
