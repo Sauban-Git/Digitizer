@@ -39,14 +39,15 @@ class CoreModel {
         }.toIntArray()
     }
 
-    fun loadWeights(context: Context, fileName: String): Array<DoubleArray> {
-        val inputStream = context.assets.open(fileName)
+    fun loadWeights(context: Context, resId: Int): Array<DoubleArray> {
+        val inputStream = context.resources.openRawResource(resId)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
         return reader.lineSequence().map { line ->
             line.split(",").map { it.trim().toDouble() }.toDoubleArray()
         }.toList().toTypedArray()
     }
+
 
 
     fun loadBiases(context: Context, resId: Int): DoubleArray {

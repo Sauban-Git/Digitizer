@@ -66,7 +66,7 @@ class DrawingView(context: Context) : View(context) {
     fun clearDrawing() {
         path.reset()
         bitmap = null
-        savedBitmap = null
+        displayBitmap = null
         invalidate()
     }
     fun saveDisplay() {
